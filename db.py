@@ -1,18 +1,18 @@
+import os
 from sqlalchemy import create_engine
-from sqlalchemy.orm import declarative_base, sessionmaker,Session
+from sqlalchemy.orm import declarative_base, sessionmaker
 
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./retail.db")
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
 
-DATABASE_URL="sqlite:///./retail.db"
-
-engine=create_engine(
-    DATABASE_URL,connect_args={"check_same_thread":False}
-)
-sessionlocal=sessionmaker(bind=engine)
-
-Base=declarative_base()
+connect_args = {"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {}
+engine = create_engine(DATABASE_URL, connect_args=connect_args)
+sessionlocal = sessionmaker(bind=engine)
+Base = declarative_base()
 
 def get_db():
-    db=sessionlocal()
+    db = sessionlocal()
     try:
         yield db
     finally:

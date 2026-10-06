@@ -5,3 +5,6 @@ class ProductCreate(BaseModel):
     category:str
     price:int
     stock:int
+class UserCreate(BaseModel):
+    username:str
+    password:str
